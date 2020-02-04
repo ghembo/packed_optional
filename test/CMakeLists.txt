@@ -43,13 +43,10 @@ else()
 							-Wcast-align
 							-Wconversion
 							-Wdouble-promotion
-							-Wduplicated-branches
-							-Wduplicated-cond
 							-Werror
 							-Wextra
 							-Wno-unknown-pragmas
 							-Wnon-virtual-dtor
-							-Wnull-dereference
 							-Wold-style-cast
 							-Woverloaded-virtual
 							-Wpedantic
@@ -57,6 +54,20 @@ else()
 							-Wsign-conversion
 							-Wunused
 							-Wuseless-cast)
+
+	if(CMAKE_CXX_COMPILER_ID MATCHES Clang )
+		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "8.0.0")
+			target_compile_options(PackedOptionalTest PRIVATE -Wnull-dereference)
+		endif()
+	else()
+		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "6.0.0")
+			target_compile_options(PackedOptionalTest PRIVATE -Wduplicated-cond -Wnull-dereference)
+		endif()
+
+		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "7.0.0")
+			target_compile_options(PackedOptionalTest PRIVATE -Wduplicated-branches)
+		endif()
+	endif()
 endif()
 
 
