@@ -52,14 +52,15 @@ else()
 							-Wpedantic
 							-Wshadow
 							-Wsign-conversion
-							-Wunused
-							-Wuseless-cast)
+							-Wunused)
 
 	if(CMAKE_CXX_COMPILER_ID MATCHES Clang )
 		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "8.0.0")
 			target_compile_options(PackedOptionalTest PRIVATE -Wnull-dereference)
 		endif()
 	else()
+		target_compile_options(PackedOptionalTest PRIVATE -Wuseless-cast)
+							
 		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "6.0.0")
 			target_compile_options(PackedOptionalTest PRIVATE -Wduplicated-cond -Wnull-dereference)
 		endif()

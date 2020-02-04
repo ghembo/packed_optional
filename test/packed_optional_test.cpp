@@ -6,6 +6,5 @@
 namespace po = packed_optional;
 
 TEST_CASE("Quick check") {
-    po::packed_optional opt;
     REQUIRE(true);
 }
