@@ -11,66 +11,65 @@ set_target_properties(PackedOptionalTest PROPERTIES CXX_EXTENSIONS OFF)
 target_link_libraries(PackedOptionalTest PRIVATE PackedOptional doctest)
 
 if(MSVC)
-	target_compile_options(PackedOptionalTest PRIVATE 
-							/W4 
-							/w14265 
-							/w14287 
-							/we4289 
-							/w14296 
-							/w14311 
-							/w14545 
-							/w14546 
-							/w14547 
-							/w14549 
-							/w14555 
-							/w14619 
-							/w14640 
-							/w14826 
-							/w14928 
-							/w44061 
-							/w44062 
-							/wd4514 
-							/wd4710 
-							/wd4711 
-							/wd4571 
-							/wd4820)
-
-	#target_compile_definitions(Iris PRIVATE _CRT_SECURE_NO_WARNINGS)
+	list(APPEND CompilerFlags 
+			/W4
+			/w14265
+			/w14287
+			/we4289
+			/w14296
+			/w14311
+			/w14545
+			/w14546
+			/w14547
+			/w14549
+			/w14555
+			/w14619
+			/w14640
+			/w14826
+			/w14928
+			/w44061
+			/w44062
+			/wd4514
+			/wd4710
+			/wd4711
+			/wd4571
+			/wd4820)
 else()
-	target_compile_options(PackedOptionalTest PRIVATE 
-							-W
-							-Wall
-							-Wcast-align
-							-Wconversion
-							-Wdouble-promotion
-							-Werror
-							-Wextra
-							-Wno-unknown-pragmas
-							-Wnon-virtual-dtor
-							-Wold-style-cast
-							-Woverloaded-virtual
-							-Wpedantic
-							-Wshadow
-							-Wsign-conversion
-							-Wunused)
+	list(APPEND CompilerFlags
+			-W
+			-Wall
+			-Wcast-align
+			-Wconversion
+			-Wdouble-promotion
+			-Werror
+			-Wextra
+			-Wno-unknown-pragmas
+			-Wnon-virtual-dtor
+			-Wold-style-cast
+			-Woverloaded-virtual
+			-Wpedantic
+			-Wshadow
+			-Wsign-conversion
+			-Wunused)
 
 	if(CMAKE_CXX_COMPILER_ID MATCHES Clang )
 		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "8.0.0")
-			target_compile_options(PackedOptionalTest PRIVATE -Wnull-dereference)
+			list(APPEND CompilerFlags -Wnull-dereference)
 		endif()
 	else()
-		target_compile_options(PackedOptionalTest PRIVATE -Wuseless-cast)
+		list(APPEND CompilerFlags -Wuseless-cast)
 							
 		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "6.0.0")
-			target_compile_options(PackedOptionalTest PRIVATE -Wduplicated-cond -Wnull-dereference)
+			list(APPEND CompilerFlags -Wduplicated-cond -Wnull-dereference)
 		endif()
 
 		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "7.0.0")
-			target_compile_options(PackedOptionalTest PRIVATE -Wduplicated-branches)
+			list(APPEND CompilerFlags -Wduplicated-branches)
 		endif()
 	endif()
 endif()
 
+target_compile_options(PackedOptionalTest PRIVATE ${CompilerFlags})
 
 # If you register a test, then ctest and make test will run it.
 # You can also run examples and check the output, as well.
