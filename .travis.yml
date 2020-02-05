@@ -88,6 +88,8 @@ matrix:
       osx_image: xcode10.2
       compiler: clang
 
+    - os: windows
+
 before_install:
   # Override compilers set by Travis
   - |
