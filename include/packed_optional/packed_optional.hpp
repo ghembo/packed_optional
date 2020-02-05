@@ -3,16 +3,19 @@
 // TODO:
 // check noexcept
 // add constexpr
-// add rvalue ref overloads
+// add rvalue ref overloads (maybe not needed since T must be integral?)
 // assert T constraints
 // add and check specific exception
+// add travis on Win
 
 namespace packed_optional {
     template<typename T, T empty_value>
     class packed_optional {
     public:
-        packed_optional() {
-        }
+        packed_optional() = default;
+        packed_optional(const packed_optional&) = default;
+
+        packed_optional& operator=(const packed_optional&) = default;
 
         packed_optional(T value)
             : value_{ value } {
