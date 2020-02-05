@@ -90,10 +90,13 @@ matrix:
 
 before_install:
   # Override compilers set by Travis
-  - if [ ! -z "${USE_CC}" ]; then echo "Override CC=${USE_CC}"; eval "CC=${USE_CC}"; fi
-  - if [ ! -z "${USE_CXX}" ]; then echo "Override CXX=${USE_CXX}"; eval "CXX=${USE_CXX}"; fi
-  - echo ${CC} && ${CC} --version
-  - echo ${CXX} && ${CXX} --version
+  - |
+    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      if [ ! -z "${USE_CC}" ]; then echo "Override CC=${USE_CC}"; eval "CC=${USE_CC}"; fi
+      if [ ! -z "${USE_CXX}" ]; then echo "Override CXX=${USE_CXX}"; eval "CXX=${USE_CXX}"; fi
+      echo ${CC} && ${CC} --version
+      echo ${CXX} && ${CXX} --version
+    fi  
 
 install:
   ############################################################################
