@@ -39,7 +39,7 @@ namespace packed_optional {
         }
 
         const T& operator*() const {
-            return value_
+            return value_;
         }
 
         T& operator*() {
