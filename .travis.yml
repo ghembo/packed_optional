@@ -20,6 +20,26 @@ matrix:
       dist: bionic # We can't install packages on Bionic, not sure why. Travis ignores addons...
       compiler: clang
 
+    # clang-4
+    - os: linux
+      name: "Xenial - clang 4"
+      dist: xenial
+      env: [USE_CC='/usr/bin/clang-4.0', USE_CXX='/usr/bin/clang++-4.0']
+      addons:
+        apt:
+          packages: ['clang-4.0', 'cmake']
+          sources: ['ubuntu-toolchain-r-test']
+
+    # clang-5
+    - os: linux
+      name: "Xenial - clang 5"
+      dist: xenial
+      env: [USE_CC='/usr/bin/clang-5.0', USE_CXX='/usr/bin/clang++-5.0']
+      addons:
+        apt:
+          packages: ['clang-5.0', 'cmake']
+          sources: ['ubuntu-toolchain-r-test']
+
     # clang-6
     - os: linux
       name: "Xenial - clang 6"
@@ -49,6 +69,26 @@ matrix:
         apt:
           packages: ['clang-8', 'cmake']
           sources: ['llvm-toolchain-xenial-8']
+
+    # gcc-5
+    - os: linux
+      name: "Xenial - gcc 5"
+      dist: xenial
+      env: [USE_CC='/usr/bin/gcc-5', USE_CXX='/usr/bin/g++-5']
+      addons:
+        apt:
+          packages: ['gcc-5', 'g++-5', 'cmake']
+          sources: ['ubuntu-toolchain-r-test']
+
+    # gcc-6
+    - os: linux
+      name: "Xenial - gcc 6"
+      dist: xenial
+      env: [USE_CC='/usr/bin/gcc-6', USE_CXX='/usr/bin/g++-6']
+      addons:
+        apt:
+          packages: ['gcc-6', 'g++-6', 'cmake']
+          sources: ['ubuntu-toolchain-r-test']
 
     # gcc-7
     - os: linux
@@ -86,6 +126,10 @@ matrix:
 
     - os: osx
       osx_image: xcode10.2
+      compiler: clang
+
+    - os: osx
+      osx_image: xcode11.2
       compiler: clang
 
     - os: windows
