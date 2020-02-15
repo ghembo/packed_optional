@@ -3,7 +3,6 @@
 // TODO:
 // check noexcept
 // add constexpr
-// add and check specific exception
 
 namespace{
     template<bool C, typename T1, typename T2>
@@ -20,6 +19,12 @@ namespace{
 }
 
 namespace packed_optional {
+    class bad_optional_access : public std::exception{
+        const char* what() const noexcept override{
+            return "Empty packed_optional";
+        }
+    };
+
     template<typename T>
     using is_valid_optional = disjunction<std::is_integral<T>, 
                                           std::is_pointer<T>, 
@@ -52,7 +57,7 @@ namespace packed_optional {
 
         T value() const {
             if (!has_value()) {
-                throw std::exception();
+                throw bad_optional_access();
             }
 
             return value_;

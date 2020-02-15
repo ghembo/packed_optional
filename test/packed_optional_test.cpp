@@ -14,7 +14,7 @@ void require_empty(po::packed_optional<T, empty_value> opt) {
     REQUIRE_FALSE(opt.has_value());
     REQUIRE_FALSE(opt);
 
-    REQUIRE_THROWS(opt.value());
+    REQUIRE_THROWS_AS(opt.value(), po::bad_optional_access);
     REQUIRE(opt.value_or(g_default_value) == g_default_value);
 }
 
