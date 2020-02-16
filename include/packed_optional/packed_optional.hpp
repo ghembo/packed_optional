@@ -78,4 +78,17 @@ namespace packed_optional {
     private:
         T value_ = empty_value;
     };
+
+    template<typename T1, typename T2, T1 empty_value1, T2 empty_value2>
+    bool operator==(const packed_optional<T1, empty_value1>& p1, 
+                    const packed_optional<T2, empty_value2>& p2){
+        return (!p1.has_value() && !p2.has_value()) ||
+               (p1.has_value() && p2.has_value() && *p1 == *p2);
+    }
+
+    template<typename T1, typename T2, T1 empty_value1, T2 empty_value2>
+    bool operator!=(const packed_optional<T1, empty_value1>& p1, 
+                    const packed_optional<T2, empty_value2>& p2){
+        return !(p1 == p2);
+    }
 }
