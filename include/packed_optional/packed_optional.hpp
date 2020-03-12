@@ -78,7 +78,7 @@ namespace packed_optional {
             return value_;
         }
 
-        constexpr T& operator*() noexcept {
+        T& operator*() noexcept {
             return value_;
         }
 
