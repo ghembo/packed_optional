@@ -3,6 +3,8 @@
 // TODO:
 // check noexcept
 // add constexpr
+// add ctor and copy-ctor from other type and optional
+// add comparison to nullopt and type
 
 namespace{
     template<bool C, typename T1, typename T2>
@@ -19,6 +21,12 @@ namespace{
 }
 
 namespace packed_optional {
+    struct nullopt_t {
+        explicit constexpr nullopt_t(int) {}
+    };
+
+    constexpr nullopt_t nullopt{ 0 };
+
     class bad_optional_access : public std::exception{
         const char* what() const noexcept override{
             return "Empty packed_optional";
@@ -40,6 +48,7 @@ namespace packed_optional {
     public:
         packed_optional() = default;
         packed_optional(const packed_optional&) = default;
+        packed_optional(nullopt_t) : packed_optional(){}
 
         packed_optional& operator=(const packed_optional&) = default;
 

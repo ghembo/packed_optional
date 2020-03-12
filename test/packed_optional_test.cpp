@@ -54,6 +54,12 @@ TEST_CASE("Creation") {
         require_empty(opt);
     }
 
+    SUBCASE("From nullopt") {
+        popt opt{ po::nullopt };
+
+        require_empty(opt);
+    }
+
     SUBCASE("From empty value") {
         popt opt{ g_empty_value };
 
@@ -95,6 +101,12 @@ TEST_CASE("Equality") {
 
         {
             popt o2{g_empty_value};
+            
+            require_equal(o1, o2);
+        }
+
+        {
+            popt o2{po::nullopt};
             
             require_equal(o1, o2);
         }
