@@ -46,13 +46,13 @@ namespace packed_optional {
     template<typename T, valid_optional_t<T> empty_value>
     class packed_optional {
     public:
-        packed_optional() = default;
-        packed_optional(const packed_optional&) = default;
-        packed_optional(nullopt_t) : packed_optional(){}
+        packed_optional() noexcept = default;
+        packed_optional(const packed_optional&) noexcept = default;
+        packed_optional(nullopt_t) noexcept : packed_optional(){}
 
-        packed_optional& operator=(const packed_optional&) = default;
+        packed_optional& operator=(const packed_optional&) noexcept = default;
 
-        packed_optional(T value)
+        packed_optional(T value) noexcept
             : value_{ value } {
         }
 
@@ -72,15 +72,15 @@ namespace packed_optional {
             return value_;
         }
 
-        T value_or(T default_value) const {
+        T value_or(T default_value) const noexcept {
             return has_value() ? value_ : default_value;
         }
 
-        const T& operator*() const {
+        const T& operator*() const noexcept {
             return value_;
         }
 
-        T& operator*() {
+        T& operator*() noexcept {
             return value_;
         }
 
@@ -90,14 +90,14 @@ namespace packed_optional {
 
     template<typename T1, typename T2, T1 empty_value1, T2 empty_value2>
     bool operator==(const packed_optional<T1, empty_value1>& p1, 
-                    const packed_optional<T2, empty_value2>& p2){
+                    const packed_optional<T2, empty_value2>& p2) noexcept {
         return (!p1.has_value() && !p2.has_value()) ||
                (p1.has_value() && p2.has_value() && *p1 == *p2);
     }
 
     template<typename T1, typename T2, T1 empty_value1, T2 empty_value2>
     bool operator!=(const packed_optional<T1, empty_value1>& p1, 
-                    const packed_optional<T2, empty_value2>& p2){
+                    const packed_optional<T2, empty_value2>& p2) noexcept {
         return !(p1 == p2);
     }
 }
