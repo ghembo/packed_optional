@@ -1,8 +1,6 @@
 #include <exception>
 
 // TODO:
-// check noexcept
-// add constexpr
 // add ctor and copy-ctor from other type and optional
 // add comparison to nullopt and type
 
@@ -46,21 +44,21 @@ namespace packed_optional {
     template<typename T, valid_optional_t<T> empty_value>
     class packed_optional {
     public:
-        packed_optional() noexcept = default;
-        packed_optional(const packed_optional&) noexcept = default;
-        packed_optional(nullopt_t) noexcept : packed_optional(){}
+        constexpr packed_optional() noexcept = default;
+        constexpr packed_optional(const packed_optional&) noexcept = default;
+        constexpr packed_optional(nullopt_t) noexcept : packed_optional(){}
 
-        packed_optional& operator=(const packed_optional&) noexcept = default;
+        constexpr packed_optional& operator=(const packed_optional&) noexcept = default;
 
-        packed_optional(T value) noexcept
+        constexpr packed_optional(T value) noexcept
             : value_{ value } {
         }
 
-        bool has_value() const noexcept {
+        constexpr bool has_value() const noexcept {
             return value_ != empty_value;
         }
 
-        explicit operator bool() const noexcept {
+        constexpr explicit operator bool() const noexcept {
             return has_value();
         }
 
@@ -72,15 +70,15 @@ namespace packed_optional {
             return value_;
         }
 
-        T value_or(T default_value) const noexcept {
+        constexpr T value_or(T default_value) const noexcept {
             return has_value() ? value_ : default_value;
         }
 
-        const T& operator*() const noexcept {
+        constexpr const T& operator*() const noexcept {
             return value_;
         }
 
-        T& operator*() noexcept {
+        constexpr T& operator*() noexcept {
             return value_;
         }
 
