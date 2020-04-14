@@ -1,5 +1,12 @@
 #include <exception>
 
+// Before C++14 constexpr implies const
+#if (__cplusplus >= 201402L)
+    #define POPT_CONSTEXPR constexpr
+#else
+    #define POPT_CONSTEXPR
+#endif
+
 // TODO:
 // add ctor and copy-ctor from other type and optional
 // add comparison to nullopt and type
@@ -48,12 +55,7 @@ namespace packed_optional {
         constexpr packed_optional(const packed_optional&) noexcept = default;
         constexpr packed_optional(nullopt_t) noexcept : packed_optional(){}
 
-// Before C++14 constexpr implies const
-#if (__cplusplus >= 201402L)
-        constexpr packed_optional& operator=(const packed_optional&) noexcept = default;
-#else
-        packed_optional& operator=(const packed_optional&) noexcept = default;
-#endif
+        POPT_CONSTEXPR packed_optional& operator=(const packed_optional&) noexcept = default;
 
         constexpr packed_optional(T value) noexcept
             : value_{ value } {
@@ -83,16 +85,9 @@ namespace packed_optional {
             return value_;
         }
 
-// Before C++14 constexpr implies const
-#if (__cplusplus >= 201402L)
-        constexpr T& operator*() noexcept {
+        POPT_CONSTEXPR T& operator*() noexcept {
             return value_;
         }
-#else
-        T& operator*() noexcept {
-            return value_;
-        }
-#endif
 
     private:
         T value_ = empty_value;
