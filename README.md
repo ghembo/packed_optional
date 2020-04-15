@@ -1,6 +1,6 @@
 # packed_optional
 
-[![Build Status](https://travis-ci.com/ghembo/PackedOptional.svg?branch=master)](https://travis-ci.com/ghembo/PackedOptional)
+[![Build Status](https://travis-ci.com/ghembo/packed_optional.svg?branch=master)](https://travis-ci.com/ghembo/packed_optional)
 
 A C++ 11 compact Optional type for types with an 'invalid' value
 
