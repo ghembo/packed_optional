@@ -21,6 +21,10 @@ void require_empty(po::packed_optional<T, empty_value> opt) {
 
     REQUIRE_THROWS_AS(opt.value(), po::bad_optional_access);
     REQUIRE(opt.value_or(g_default_value) == g_default_value);
+    REQUIRE(opt == po::nullopt);
+    REQUIRE_FALSE(opt != po::nullopt);
+    REQUIRE(po::nullopt == opt);
+    REQUIRE_FALSE(po::nullopt != opt);
 }
 
 template<typename T, T empty_value>
@@ -31,6 +35,10 @@ void require_has_value(po::packed_optional<T, empty_value> opt, T value) {
     REQUIRE(opt.value() == value);
     REQUIRE(opt.value_or(g_default_value) == value);
     REQUIRE(*opt == value);
+    REQUIRE_FALSE(opt == po::nullopt);
+    REQUIRE(opt != po::nullopt);
+    REQUIRE_FALSE(po::nullopt == opt);
+    REQUIRE(po::nullopt != opt);
 }
 
 template<typename T1, typename T2, T1 empty_value1, T2 empty_value2>
