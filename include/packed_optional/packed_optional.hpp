@@ -8,7 +8,7 @@
 #endif
 
 // TODO:
-// add ctor and copy-ctor from other type and optional
+// add ctor and copy-ctor from other type
 // add comparison to type
 
 namespace{
@@ -54,11 +54,24 @@ namespace packed_optional {
                       "T must be a valid non-type parameter type");
 
     public:
+        using value_type = T;
+
         constexpr packed_optional() noexcept = default;
         constexpr packed_optional(const packed_optional&) noexcept = default;
         constexpr packed_optional(nullopt_t) noexcept : packed_optional(){}
+        
+        template<typename T2, valid_optional_t<T2> empty_value2>
+        constexpr packed_optional(const packed_optional<T2, empty_value2>& other) noexcept
+            : value_{ other.has_value() ? *other : empty_value }{
+        }
 
         POPT_CONSTEXPR packed_optional& operator=(const packed_optional&) noexcept = default;
+        
+        template<typename T2, valid_optional_t<T2> empty_value2>
+        POPT_CONSTEXPR packed_optional& operator=(const packed_optional<T2, empty_value2>& other) noexcept {
+            *this = packed_optional(other);
+            return *this;
+        }
 
         constexpr packed_optional(T value) noexcept
             : value_{ value } {

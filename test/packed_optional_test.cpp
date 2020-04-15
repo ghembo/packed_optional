@@ -95,6 +95,23 @@ TEST_CASE("Creation") {
             require_has_value(copy, g_value);
         }
     }
+
+    SUBCASE("From packed_optional of different type") {
+        SUBCASE("Empty") {
+            popt_c opt;
+            popt copy{ opt };
+
+            require_empty(copy);
+        }
+
+        SUBCASE("With value") {
+            popt_c opt{ g_default_value_c };
+            popt copy{ opt };
+
+            require_has_value(copy, 
+            static_cast<typename popt::value_type>(g_default_value_c));
+        }
+    }
 }
 
 TEST_CASE("Equality") {
@@ -283,6 +300,25 @@ TEST_CASE("Copy") {
             copy = g_value;
 
             require_has_value(copy, g_value);
+        }
+    }
+
+    SUBCASE("From packed_optional of different type") {
+        SUBCASE("Empty") {
+            popt_c opt;
+            popt copy;
+            copy = opt;
+
+            require_empty(copy);
+        }
+
+        SUBCASE("With value") {
+            popt_c opt{ g_default_value_c };
+            popt copy;
+            copy = opt;
+
+            require_has_value(copy, 
+            static_cast<typename popt::value_type>(g_default_value_c));
         }
     }
 }
