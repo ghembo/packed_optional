@@ -46,6 +46,8 @@ void require_equal(const po::packed_optional<T1, empty_value1>& p1,
                    const po::packed_optional<T2, empty_value2>& p2){
     REQUIRE(p1 == p2);
     REQUIRE_FALSE(p1 != p2);
+    REQUIRE(p2 == p1);
+    REQUIRE_FALSE(p2 != p1);
 }
 
 template<typename T1, typename T2, T1 empty_value1, T2 empty_value2>
@@ -53,6 +55,26 @@ void require_not_equal(const po::packed_optional<T1, empty_value1>& p1,
                    const po::packed_optional<T2, empty_value2>& p2){
     REQUIRE(p1 != p2);
     REQUIRE_FALSE(p1 == p2);
+    REQUIRE(p2 != p1);
+    REQUIRE_FALSE(p2 == p1);
+}
+
+template<typename T1, typename T2, T1 empty_value1>
+void require_equal(const po::packed_optional<T1, empty_value1>& p1, 
+                   const T2& p2){
+    REQUIRE(p1 == p2);
+    REQUIRE_FALSE(p1 != p2);
+    REQUIRE(p2 == p1);
+    REQUIRE_FALSE(p2 != p1);
+}
+
+template<typename T1, typename T2, T1 empty_value1>
+void require_not_equal(const po::packed_optional<T1, empty_value1>& p1, 
+                   const T2& p2){
+    REQUIRE(p1 != p2);
+    REQUIRE_FALSE(p1 == p2);
+    REQUIRE(p2 != p1);
+    REQUIRE_FALSE(p2 == p1);
 }
 
 TEST_CASE("Creation") {
@@ -142,6 +164,7 @@ TEST_CASE("Equality") {
         popt o2{g_value};
         
         require_equal(o1, o2);
+        require_equal(o1, g_value);
     }
 
     {
@@ -177,6 +200,7 @@ TEST_CASE("Equality") {
         popt_other o2{g_default_value};
         
         require_equal(o1, o2);
+        require_equal(o1, g_default_value_c);
     }
 
     {
@@ -214,6 +238,7 @@ TEST_CASE("Inequality") {
         popt o2{g_default_value};
 
         require_not_equal(o1, o2);
+        require_not_equal(o1, g_default_value);
     }
     
     {
@@ -256,6 +281,7 @@ TEST_CASE("Inequality") {
         popt_c o2{g_default_value_c};
         
         require_not_equal(o1, o2);
+        require_not_equal(o1, g_default_value_c);
     }
 
     {
