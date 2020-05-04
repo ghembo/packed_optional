@@ -232,7 +232,7 @@ TEST_CASE("Equality") {
     }
 }
 
-TEST_CASE("Inequality") {
+TEST_CASE("Difference") {
     {
         popt o1;
         popt o2{g_default_value};
@@ -291,6 +291,71 @@ TEST_CASE("Inequality") {
         require_not_equal(o1, o2);
     }
 }
+
+TEST_CASE("Inequality") {
+    SUBCASE("Between packed_optional") {
+        {
+            popt o1;
+            popt o2;
+
+            REQUIRE_FALSE(o1 < o2);
+            REQUIRE_FALSE(o1 > o2);
+            REQUIRE(o1 <= o2);
+            REQUIRE(o1 >= o2);
+
+            REQUIRE_FALSE(o2 < o1);
+            REQUIRE_FALSE(o2 > o1);
+            REQUIRE(o2 <= o1);
+            REQUIRE(o2 >= o1);
+        }
+
+        {
+            popt o1;
+            popt o2{g_default_value};
+
+            REQUIRE(o1 < o2);
+            REQUIRE_FALSE(o1 > o2);
+            REQUIRE(o1 <= o2);
+            REQUIRE_FALSE(o1 >= o2);
+
+            REQUIRE_FALSE(o2 < o1);
+            REQUIRE(o2 > o1);
+            REQUIRE_FALSE(o2 <= o1);
+            REQUIRE(o2 >= o1);
+        }
+    }
+    
+    SUBCASE("With nullopt_t") {
+        {
+            popt o1;
+
+            REQUIRE_FALSE(o1 < po::nullopt);
+            REQUIRE_FALSE(o1 > po::nullopt);
+            REQUIRE(o1 <= po::nullopt);
+            REQUIRE(o1 >= po::nullopt);
+
+            REQUIRE_FALSE(po::nullopt < o1);
+            REQUIRE_FALSE(po::nullopt > o1);
+            REQUIRE(po::nullopt <= o1);
+            REQUIRE(po::nullopt >= o1);
+        }
+
+        {
+            popt o2{g_default_value};
+
+            REQUIRE(po::nullopt < o2);
+            REQUIRE_FALSE(po::nullopt > o2);
+            REQUIRE(po::nullopt <= o2);
+            REQUIRE_FALSE(po::nullopt >= o2);
+
+            REQUIRE_FALSE(o2 < po::nullopt);
+            REQUIRE(o2 > po::nullopt);
+            REQUIRE_FALSE(o2 <= po::nullopt);
+            REQUIRE(o2 >= po::nullopt);
+        }
+    }
+}
+    
 
 TEST_CASE("Copy") {
     SUBCASE("From other packed_optional") {
