@@ -323,6 +323,36 @@ TEST_CASE("Inequality") {
             REQUIRE_FALSE(o2 <= o1);
             REQUIRE(o2 >= o1);
         }
+
+        {
+            popt o1{g_default_value};
+            popt o2{g_default_value};
+
+            REQUIRE_FALSE(o1 < o2);
+            REQUIRE_FALSE(o1 > o2);
+            REQUIRE(o1 <= o2);
+            REQUIRE(o1 >= o2);
+
+            REQUIRE_FALSE(o2 < o1);
+            REQUIRE_FALSE(o2 > o1);
+            REQUIRE(o2 <= o1);
+            REQUIRE(o2 >= o1);
+        }
+
+        {
+            popt o1{g_default_value};
+            popt o2{g_default_value + 1};
+
+            REQUIRE(o1 < o2);
+            REQUIRE_FALSE(o1 > o2);
+            REQUIRE(o1 <= o2);
+            REQUIRE_FALSE(o1 >= o2);
+
+            REQUIRE_FALSE(o2 < o1);
+            REQUIRE(o2 > o1);
+            REQUIRE_FALSE(o2 <= o1);
+            REQUIRE(o2 >= o1);
+        }
     }
     
     SUBCASE("With nullopt_t") {
@@ -352,6 +382,50 @@ TEST_CASE("Inequality") {
             REQUIRE(o2 > po::nullopt);
             REQUIRE_FALSE(o2 <= po::nullopt);
             REQUIRE(o2 >= po::nullopt);
+        }
+    }
+    
+    SUBCASE("With value") {
+        {
+            popt o1;
+
+            REQUIRE(o1 < g_default_value);
+            REQUIRE_FALSE(o1 > g_default_value);
+            REQUIRE(o1 <= g_default_value);
+            REQUIRE_FALSE(o1 >= g_default_value);
+
+            REQUIRE_FALSE(g_default_value < o1);
+            REQUIRE(g_default_value > o1);
+            REQUIRE_FALSE(g_default_value <= o1);
+            REQUIRE(g_default_value >= o1);
+        }
+
+        {
+            popt o2{g_default_value};
+
+            REQUIRE_FALSE(o2 < g_default_value);
+            REQUIRE_FALSE(o2 > g_default_value);
+            REQUIRE(o2 <= g_default_value);
+            REQUIRE(o2 >= g_default_value);
+
+            REQUIRE_FALSE(g_default_value < o2);
+            REQUIRE_FALSE(g_default_value > o2);
+            REQUIRE(g_default_value <= o2);
+            REQUIRE(g_default_value >= o2);
+        }
+
+        {
+            popt o2{g_default_value + 1};
+
+            REQUIRE(g_default_value < o2);
+            REQUIRE_FALSE(g_default_value > o2);
+            REQUIRE(g_default_value <= o2);
+            REQUIRE_FALSE(g_default_value >= o2);
+
+            REQUIRE_FALSE(o2 < g_default_value);
+            REQUIRE(o2 > g_default_value);
+            REQUIRE_FALSE(o2 <= g_default_value);
+            REQUIRE(o2 >= g_default_value);
         }
     }
 }
