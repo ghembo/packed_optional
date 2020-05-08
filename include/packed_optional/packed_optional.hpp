@@ -38,7 +38,7 @@ namespace packed_optional {
         : public std::false_type {}; \
     template<typename T1, typename T2>\
     struct Has##macro_name<T1, T2, decltype(function_name(NoConvert<T1>(), NoConvert<T2>()), void())>\
-        : public std::true_type {};
+        : public std::true_type {}
     
     HAS(equal, Equal);
     HAS(not_equal, NotEqual);
