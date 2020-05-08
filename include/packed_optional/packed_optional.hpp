@@ -7,8 +7,6 @@
     #define POPT_CONSTEXPR
 #endif
 
-// TODO:
-// add ctor and copy-ctor from other type
 
 namespace{
     template<bool C, typename T1, typename T2>

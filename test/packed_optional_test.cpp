@@ -102,6 +102,16 @@ TEST_CASE("Creation") {
         require_has_value(opt, g_value);
     }
 
+    SUBCASE("From other value") {
+        popt opt{ g_default_value_c };
+
+        require_has_value(opt, static_cast<int>(g_default_value_c));
+
+        popt_c opt_c{ g_default_value };
+
+        require_has_value(opt_c, static_cast<char>(g_default_value));
+    }
+
     SUBCASE("From other packed_optional") {
         SUBCASE("Empty") {
             popt opt;
@@ -466,6 +476,18 @@ TEST_CASE("Copy") {
 
             require_has_value(copy, g_value);
         }
+    }
+
+    SUBCASE("From other value") {
+        popt opt;
+        opt = g_default_value;
+
+        require_has_value(opt, g_default_value);
+
+        popt_c opt_c;
+        opt_c = g_default_value_c;
+
+        require_has_value(opt_c, g_default_value_c);
     }
 
     SUBCASE("From packed_optional of different type") {
