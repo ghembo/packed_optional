@@ -25,109 +25,110 @@ namespace{
 }
 
 namespace packed_optional {
-
-    template <class Source> struct NoConvert { 
-        operator Source() const = delete;
-        operator Source const&() const;
-    };    
-    
-
-    #define HAS(function_name, macro_name) \
-    template<typename T1, typename T2, typename T3 = void> \
-    struct Has##macro_name \
-        : public std::false_type {}; \
-    template<typename T1, typename T2>\
-    struct Has##macro_name<T1, T2, decltype(function_name(NoConvert<T1>(), NoConvert<T2>()), void())>\
-        : public std::true_type {}
-    
-    HAS(equal, Equal);
-    HAS(not_equal, NotEqual);
-    HAS(less_than, Less);
-
-
-    template<typename T1>
-    struct Equatable{
-        template<typename T2>
-        friend bool equal(const T1& op1, const T2& op2) noexcept {
-            static_assert(HasEqual<T1, T2>::value, "No operator== defined");
-
-            return (op1 == op2);
-        }
-
-        template<typename T2>
-        friend bool not_equal(const T1& op1, const T2& op2) noexcept {
-            static_assert(HasEqual<T1, T2>::value, "No operator== defined");
-
-            return !(op1 == op2);
-        }
-
-        template<typename T2>
-        friend bool operator!=(const T1& op1, const T2& op2) noexcept {
-            static_assert(HasEqual<T1, T2>::value, "No operator== defined");
-
-            return not_equal(op1, op2);
-        }
+    namespace details{
+        template <class Source> struct NoConvert { 
+            operator Source() const = delete;
+            operator Source const&() const;
+        };
         
-        template<typename T2>
-        friend enable_if_t<!HasEqual<T2, T1>::value, bool> operator==(const T2& op1, const T1& op2) noexcept {
-            static_assert(HasEqual<T1, T2>::value, "No operator== defined");
 
-            return (op2 == op1);
-        }
+        #define HAS(function_name, macro_name) \
+        template<typename T1, typename T2, typename T3 = void> \
+        struct Has##macro_name \
+            : public std::false_type {}; \
+        template<typename T1, typename T2>\
+        struct Has##macro_name<T1, T2, decltype(function_name(NoConvert<T1>(), NoConvert<T2>()), void())>\
+            : public std::true_type {}
+        
+        HAS(equal, Equal);
+        HAS(not_equal, NotEqual);
+        HAS(less_than, Less);
 
-        template<typename T2>
-        friend enable_if_t<!HasNotEqual<T2, T1>::value, bool> operator!=(const T2& op1, const T1& op2) noexcept {
-            return (op2 != op1);
-        }
-    };
-    
 
-    template<typename T1>
-    struct Comparable{
-        template<typename T2>
-        friend bool less_than(const T1& op1, const T2& op2) noexcept {
-            static_assert(HasLess<T1, T2>::value, "No operator< defined");
+        template<typename T1>
+        struct Equatable{
+            template<typename T2>
+            friend bool equal(const T1& op1, const T2& op2) noexcept {
+                static_assert(HasEqual<T1, T2>::value, "No operator== defined");
 
-            return (op1 < op2);
-        }
+                return (op1 == op2);
+            }
 
-        template<typename T2>
-        friend bool operator<=(const T1& op1, const T2& op2) noexcept {
-            static_assert(HasEqual<T1, T2>::value, "No operator== defined");
+            template<typename T2>
+            friend bool not_equal(const T1& op1, const T2& op2) noexcept {
+                static_assert(HasEqual<T1, T2>::value, "No operator== defined");
+
+                return !(op1 == op2);
+            }
+
+            template<typename T2>
+            friend bool operator!=(const T1& op1, const T2& op2) noexcept {
+                static_assert(HasEqual<T1, T2>::value, "No operator== defined");
+
+                return not_equal(op1, op2);
+            }
             
-            return less_than(op1, op2) || (op1 == op2);
-        }
+            template<typename T2>
+            friend enable_if_t<!HasEqual<T2, T1>::value, bool> operator==(const T2& op1, const T1& op2) noexcept {
+                static_assert(HasEqual<T1, T2>::value, "No operator== defined");
 
-        template<typename T2>
-        friend bool operator>(const T1& op1, const T2& op2) noexcept {
-            return !(op1 <= op2);
-        }
+                return (op2 == op1);
+            }
 
-        template<typename T2>
-        friend bool operator>=(const T1& op1, const T2& op2) noexcept {
-            return !less_than(op1, op2);
-        }
+            template<typename T2>
+            friend enable_if_t<!HasNotEqual<T2, T1>::value, bool> operator!=(const T2& op1, const T1& op2) noexcept {
+                return (op2 != op1);
+            }
+        };
         
-        template<typename T2>
-        friend enable_if_t<!HasLess<T2, T1>::value, bool> operator<(const T2& op1, const T1& op2) noexcept {
-            return (op2 > op1);
-        }
-        
-        template<typename T2>
-        friend enable_if_t<!HasLess<T2, T1>::value, bool> operator<=(const T2& op1, const T1& op2) noexcept {
-            return (op2 >= op1);
-        }
-        
-        template<typename T2>
-        friend enable_if_t<!HasLess<T2, T1>::value, bool> operator>(const T2& op1, const T1& op2) noexcept {
-            return (op2 < op1);
-        }
-        
-        template<typename T2>
-        friend enable_if_t<!HasLess<T2, T1>::value, bool> operator>=(const T2& op1, const T1& op2) noexcept {
-            return (op2 <= op1);
-        }
-    };
+
+        template<typename T1>
+        struct Comparable{
+            template<typename T2>
+            friend bool less_than(const T1& op1, const T2& op2) noexcept {
+                static_assert(HasLess<T1, T2>::value, "No operator< defined");
+
+                return (op1 < op2);
+            }
+
+            template<typename T2>
+            friend bool operator<=(const T1& op1, const T2& op2) noexcept {
+                static_assert(HasEqual<T1, T2>::value, "No operator== defined");
+                
+                return less_than(op1, op2) || (op1 == op2);
+            }
+
+            template<typename T2>
+            friend bool operator>(const T1& op1, const T2& op2) noexcept {
+                return !(op1 <= op2);
+            }
+
+            template<typename T2>
+            friend bool operator>=(const T1& op1, const T2& op2) noexcept {
+                return !less_than(op1, op2);
+            }
+            
+            template<typename T2>
+            friend enable_if_t<!HasLess<T2, T1>::value, bool> operator<(const T2& op1, const T1& op2) noexcept {
+                return (op2 > op1);
+            }
+            
+            template<typename T2>
+            friend enable_if_t<!HasLess<T2, T1>::value, bool> operator<=(const T2& op1, const T1& op2) noexcept {
+                return (op2 >= op1);
+            }
+            
+            template<typename T2>
+            friend enable_if_t<!HasLess<T2, T1>::value, bool> operator>(const T2& op1, const T1& op2) noexcept {
+                return (op2 < op1);
+            }
+            
+            template<typename T2>
+            friend enable_if_t<!HasLess<T2, T1>::value, bool> operator>=(const T2& op1, const T1& op2) noexcept {
+                return (op2 <= op1);
+            }
+        };
+    }
 
 
     struct nullopt_t {
@@ -136,11 +137,13 @@ namespace packed_optional {
 
     constexpr nullopt_t nullopt{ 0 };
 
+
     class bad_optional_access : public std::exception{
         const char* what() const noexcept override{
             return "Empty packed_optional";
         }
     };
+
 
     template<typename T>
     using is_valid_optional = disjunction<std::is_integral<T>, 
@@ -151,11 +154,12 @@ namespace packed_optional {
 
     template<typename T>
     using valid_optional_t = enable_if_t<is_valid_optional<T>::value,T>;
-                                    
+
+
     template<typename T, valid_optional_t<T> empty_value>
     class packed_optional
-        : public Equatable<packed_optional<T, empty_value>>,
-          public Comparable<packed_optional<T, empty_value>>{
+        : public details::Equatable<packed_optional<T, empty_value>>,
+          public details::Comparable<packed_optional<T, empty_value>>{
         static_assert(is_valid_optional<T>::value, 
                       "T must be a valid non-type parameter type");
 
@@ -214,6 +218,7 @@ namespace packed_optional {
     private:
         T value_ = empty_value;
     };
+
 
     template<typename T1, typename T2, T1 empty_value1, T2 empty_value2>
     bool operator==(const packed_optional<T1, empty_value1>& op1, 
