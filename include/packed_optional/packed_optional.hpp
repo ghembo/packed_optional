@@ -86,7 +86,7 @@ namespace packed_optional {
     struct Comparable{
         template<typename T2>
         friend bool less_than(const T1& op1, const T2& op2) noexcept {
-            static_assert(HasEqual<T1, T2>::value, "No operator== defined");
+            static_assert(HasLess<T1, T2>::value, "No operator< defined");
 
             return (op1 < op2);
         }
@@ -94,8 +94,8 @@ namespace packed_optional {
         template<typename T2>
         friend bool operator<=(const T1& op1, const T2& op2) noexcept {
             static_assert(HasEqual<T1, T2>::value, "No operator== defined");
-            static_assert(HasLess<T1, T2>::value, "No operator< defined");
-            return (op1 < op2) || (op1 == op2);
+            
+            return less_than(op1, op2) || (op1 == op2);
         }
 
         template<typename T2>
@@ -105,15 +105,27 @@ namespace packed_optional {
 
         template<typename T2>
         friend bool operator>=(const T1& op1, const T2& op2) noexcept {
-            static_assert(HasLess<T1, T2>::value, "No operator< defined");
-            return !(op1 < op2);
+            return !less_than(op1, op2);
         }
         
         template<typename T2>
         friend enable_if_t<!HasLess<T2, T1>::value, bool> operator<(const T2& op1, const T1& op2) noexcept {
-            static_assert(HasLess<T1, T2>::value, "No operator== defined");
-
             return (op2 > op1);
+        }
+        
+        template<typename T2>
+        friend enable_if_t<!HasLess<T2, T1>::value, bool> operator<=(const T2& op1, const T1& op2) noexcept {
+            return (op2 >= op1);
+        }
+        
+        template<typename T2>
+        friend enable_if_t<!HasLess<T2, T1>::value, bool> operator>(const T2& op1, const T1& op2) noexcept {
+            return (op2 < op1);
+        }
+        
+        template<typename T2>
+        friend enable_if_t<!HasLess<T2, T1>::value, bool> operator>=(const T2& op1, const T1& op2) noexcept {
+            return (op2 <= op1);
         }
     };
 
@@ -220,66 +232,24 @@ namespace packed_optional {
     bool operator==(const packed_optional<T, empty_value>& op, 
                     T2 value) noexcept {
         return (op.has_value() && *op == value);
-    }
-
-    
+    }    
 
     template<typename T1, typename T2, T1 empty_value1, T2 empty_value2>
     bool operator<(const packed_optional<T1, empty_value1>& op1, 
                     const packed_optional<T2, empty_value2>& op2) noexcept {
         return (!op1.has_value() && op2.has_value()) ||
                (op1.has_value() && op2.has_value() && *op1 < *op2);
-    }
-
-    
+    }    
 
     template<typename T, T empty_value>
     bool operator<(const packed_optional<T, empty_value>&, 
                     nullopt_t) noexcept {
         return false;
-    }
-
-    template<typename T, T empty_value>
-    bool operator<=(nullopt_t,
-                    const packed_optional<T, empty_value>&) noexcept {
-        return true;
-    }
-
-    template<typename T, T empty_value>
-    bool operator>(nullopt_t nop,
-                    const packed_optional<T, empty_value>& op) noexcept {
-        return !(nop <= op);
-    }
-
-    template<typename T, T empty_value>
-    bool operator>=(nullopt_t nop,
-                    const packed_optional<T, empty_value>& op) noexcept {
-        return !(nop < op);
-    }
-
-    
+    }    
 
     template<typename T, typename T2, T empty_value, typename Dummy = valid_optional_t<T2>>
     bool operator<(const packed_optional<T, empty_value>& op, 
                     T2 value) noexcept {
         return (!op.has_value() || (*op < value));
-    }
-
-    template<typename T, typename T2, T empty_value, typename Dummy = valid_optional_t<T2>>
-    bool operator<=(T2 value,
-                    const packed_optional<T, empty_value>& op) noexcept {
-        return ((value < op) || (value == op));
-    }
-
-    template<typename T, typename T2, T empty_value, typename Dummy = valid_optional_t<T2>>
-    bool operator>(T2 value,
-                    const packed_optional<T, empty_value>& op) noexcept {
-        return !(value <= op);
-    }
-
-    template<typename T, typename T2, T empty_value, typename Dummy = valid_optional_t<T2>>
-    bool operator>=(T2 value,
-                    const packed_optional<T, empty_value>& op) noexcept {
-        return !(value < op);
     }
 }
