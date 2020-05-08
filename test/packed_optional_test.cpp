@@ -107,7 +107,8 @@ TEST_CASE("Creation") {
 
         require_has_value(opt, static_cast<int>(g_default_value_c));
 
-        popt_c opt_c{ g_default_value };
+        // Allow narrowing
+        popt_c opt_c(g_default_value);
 
         require_has_value(opt_c, static_cast<char>(g_default_value));
     }
