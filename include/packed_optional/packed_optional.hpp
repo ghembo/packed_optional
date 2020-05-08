@@ -26,31 +26,34 @@ namespace{
 
 namespace packed_optional {
 
-    template<typename T1, typename T2, typename T3 = void>
-    struct HasEqual
-        : public std::false_type {};
-
-    template<typename T1, typename T2>
-    struct HasEqual<T1, T2, decltype(std::declval<T1>() == std::declval<T2>(), void())>
-        : public std::true_type {};
-
-
     template <class Source> struct NoConvert { 
         operator Source() const = delete;
         operator Source const&() const;
-    }; 
+    };    
+    
 
-    template<typename T1, typename T2, typename T3 = void>
-    struct HasNotEqual
-        : public std::false_type {};
-
-    template<typename T1, typename T2>
-    struct HasNotEqual<T1, T2, decltype(not_equal(NoConvert<T1>(), NoConvert<T2>()), void())>
+    #define HAS(function_name, macro_name) \
+    template<typename T1, typename T2, typename T3 = void> \
+    struct Has##macro_name \
+        : public std::false_type {}; \
+    template<typename T1, typename T2>\
+    struct Has##macro_name<T1, T2, decltype(function_name(NoConvert<T1>(), NoConvert<T2>()), void())>\
         : public std::true_type {};
+    
+    HAS(equal, Equal);
+    HAS(not_equal, NotEqual);
+    HAS(less_than, Less);
 
 
     template<typename T1>
     struct Equatable{
+        template<typename T2>
+        friend bool equal(const T1& op1, const T2& op2) noexcept {
+            static_assert(HasEqual<T1, T2>::value, "No operator== defined");
+
+            return (op1 == op2);
+        }
+
         template<typename T2>
         friend bool not_equal(const T1& op1, const T2& op2) noexcept {
             static_assert(HasEqual<T1, T2>::value, "No operator== defined");
@@ -77,19 +80,17 @@ namespace packed_optional {
             return (op2 != op1);
         }
     };
-        
-
-    template<typename T1, typename T2, typename T3 = void>
-    struct HasLess
-        : public std::false_type {};
-
-    template<typename T1, typename T2>
-    struct HasLess<T1, T2, decltype(std::declval<T1>() < std::declval<T2>(), void())>
-        : public std::true_type {};
     
 
     template<typename T1>
     struct Comparable{
+        template<typename T2>
+        friend bool less_than(const T1& op1, const T2& op2) noexcept {
+            static_assert(HasEqual<T1, T2>::value, "No operator== defined");
+
+            return (op1 < op2);
+        }
+
         template<typename T2>
         friend bool operator<=(const T1& op1, const T2& op2) noexcept {
             static_assert(HasEqual<T1, T2>::value, "No operator== defined");
