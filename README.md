@@ -2,7 +2,7 @@
 
 A C++ 11 compact Optional type for types with an 'invalid' value.
 
-[![Build Status](https://travis-ci.com/ghembo/packed_optional.svg?branch=master)](https://travis-ci.com/ghembo/packed_optional)
+[![Build Status](https://app.travis-ci.com/ghembo/packed_optional.svg?branch=master)](https://app.travis-ci.com/ghembo/packed_optional)
 
 Often the *invalid* or *empty* state of a variable is encoded in a specific value, e.g. `-1` for an `int`. A better alternative would be to use `std::optional`, but if the added space overhead is not viable, `paked_optional` provides a compromise and can be used as a drop-in replacement to `std::optional`.
 
